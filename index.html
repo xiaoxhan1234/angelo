@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>杜王町 - 安杰罗岩打卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'MS UI Gothic', 'Segoe UI', sans-serif;
+            background-color: #f0e6d6;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            border: 5px solid #8b4513;
+        }
+        
+        h1 {
+            color: #b22222;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 0 #ccc;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            margin-bottom: 30px;
+            color: #666;
+        }
+        
+        .angelo-frame {
+            width: 90%;
+            max-width: 500px;
+            margin: 20px auto;
+            border: 15px solid #a52a2a;
+            background-color: #000;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        #angeloImage {
+            width: 100%;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        #angeloImage:hover {
+            transform: scale(1.02);
+        }
+        
+        #punchButton {
+            background: linear-gradient(to bottom, #ff8c00, #ff4500);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 30px 0;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 69, 0, 0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        #punchButton:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 69, 0, 0.6);
+            background: linear-gradient(to bottom, #ff4500, #ff8c00);
+        }
+        
+        #punchButton:disabled {
+            background: linear-gradient(to bottom, #888, #666);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .stats {
+            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f5f5dc;
+            border-left: 5px solid #daa520;
+            text-align: left;
+        }
+        
+        .count-display {
+            font-size: 3em;
+            color: #b22222;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        #punchHistory {
+            margin-top: 30px;
+            max-height: 200px;
+            overflow-y: auto;
+            border-top: 2px dashed #8b4513;
+            padding-top: 20px;
+        }
+        
+        .punch-record {
+            padding: 8px;
+            border-bottom: 1px dotted #ccc;
+        }
+        
+        .speech-bubble {
+            position: relative;
+            background: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 80%;
+            border: 3px solid #333;
+            font-style: italic;
+        }
+        
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            border-width: 15px 10px 0;
+            border-style: solid;
+            border-color: #fff transparent transparent;
+            transform: translateX(-50%);
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(233, 69, 96, 0.2);
+            border: 1px solid #e94560;
+            display: none;
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            #punchButton {
+                padding: 15px 30px;
+                font-size: 1.2rem;
+            }
+            
+            .count-display {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>杜王町定禅寺通</h1>
+        <p class="subtitle">~ 名胜其一 · 安杰罗岩 ~</p>
+
+        <div class="speech-bubble">
+            <p>哟，安杰罗！今天你也在这里当路标吗？</p>
+        </div>
+
+        <div class="angelo-frame">
+            <img id="angeloImage" src="angelo.jpg" alt="被东方仗助打入岩石的片桐安十郎（安杰罗）">
+        </div>
+
+        <button id="punchButton">哟，安杰罗～</button>
+        
+        <div id="message" class="message">
+            今天已经打卡过了，明天再来吧！
+        </div>
+
+        <div class="stats">
+            <p>今日打卡次数：<span id="todayCount" class="count-display">0</span> 次</p>
+            <p>历史总打卡次数：<span id="totalCount" class="count-display">0</span> 次</p>
+            <p>连续打卡天数：<span id="streakCount" class="count-display">0</span> 天</p>
+            <p>首次打卡时间：<span id="firstPunch">暂无</span></p>
+        </div>
+
+        <div id="punchHistory">
+            <h3>打卡记录</h3>
+            <div id="historyList"></div>
+        </div>
+        
+        <!-- 音频元素 -->
+        <audio id="soundEffect" src="angelo-sound.mp3" preload="auto"></audio>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化数据
+            let punchData = JSON.parse(localStorage.getItem('angeloPunchData')) || {
+                totalPunches: 0,
+                todayPunches: 0,
+                lastPunchDate: null,
+                streak: 0,
+                firstPunchDate: null,
+                punchHistory: []
+            };
+            
+            const punchButton = document.getElementById('punchButton');
+            const message = document.getElementById('message');
+            const todayCount = document.getElementById('todayCount');
+            const totalCount = document.getElementById('totalCount');
+            const streakCount = document.getElementById('streakCount');
+            const firstPunch = document.getElementById('firstPunch');
+            const historyList = document.getElementById('historyList');
+            const soundEffect = document.getElementById('soundEffect');
+            
+            // 检查今天是否已经打卡
+            const today = new Date().toDateString();
+            if (punchData.lastPunchDate === today) {
+                punchButton.disabled = true;
+                message.style.display = 'block';
+            }
+            
+            // 更新显示
+            updateDisplay();
+            
+            // 打卡按钮点击事件
+            punchButton.addEventListener('click', function() {
+                const now = new Date();
+                const todayStr = now.toDateString();
+                
+                // 如果今天已经打卡，显示消息并返回
+                if (punchData.lastPunchDate === todayStr) {
+                    message.style.display = 'block';
+                    punchButton.disabled = true;
+                    return;
+                }
+                
+                // 播放音效
+                playPunchSound();
+                
+                // 更新连续打卡
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                if (punchData.lastPunchDate === yesterday.toDateString()) {
+                    punchData.streak++;
+                } else if (punchData.lastPunchDate !== todayStr) {
+                    // 如果不是连续打卡，重置连续打卡计数
+                    punchData.streak = 1;
+                }
+                
+                // 更新打卡数据
+                punchData.todayPunches = 1;
+                punchData.totalPunches++;
+                punchData.lastPunchDate = todayStr;
+                
+                // 记录第一次打卡的时间
+                if (!punchData.firstPunchDate) {
+                    punchData.firstPunchDate = now.toISOString();
+                }
+                
+                // 添加打卡记录
+                punchData.punchHistory.push({
+                    date: now.toLocaleDateString('zh-CN'),
+                    time: now.toLocaleTimeString('zh-CN'),
+                    timestamp: now.getTime()
+                });
+                
+                // 保存到本地存储
+                localStorage.setItem('angeloPunchData', JSON.stringify(punchData));
+                
+                // 更新显示
+                updateDisplay();
+                
+                // 禁用按钮并显示消息
+                punchButton.disabled = true;
+                message.style.display = 'block';
+            });
+            
+            function updateDisplay() {
+                todayCount.textContent = punchData.todayPunches;
+                totalCount.textContent = punchData.totalPunches;
+                streakCount.textContent = punchData.streak;
+                
+                if (punchData.firstPunchDate) {
+                    firstPunch.textContent = new Date(punchData.firstPunchDate).toLocaleDateString('zh-CN');
+                } else {
+                    firstPunch.textContent = '暂无';
+                }
+                
+                // 更新历史记录列表
+                historyList.innerHTML = '';
+                if (punchData.punchHistory.length === 0) {
+                    historyList.innerHTML = '<div class="punch-record">暂无打卡记录</div>';
+                } else {
+                    punchData.punchHistory.slice().reverse().forEach(record => {
+                        const recordElement = document.createElement('div');
+                        recordElement.className = 'punch-record';
+                        recordElement.textContent = `${record.date} ${record.time} - 哟，安杰罗！`;
+                        historyList.appendChild(recordElement);
+                    });
+                }
+            }
+            
+            function playPunchSound() {
+                // 播放音效
+                soundEffect.currentTime = 0;
+                soundEffect.play().catch(e => {
+                    console.log("音频播放失败，请确保angelo-sound.mp3文件存在: ", e);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
